@@ -28,8 +28,8 @@ class XmlParser():
     
     def encode_list(self, list):
         """
-Decodes the list of words from utf-8
-"""
+	Decodes the list of words from utf-8
+	"""
         list = [x.encode("utf-8") for x in list]
         return list
 
@@ -43,8 +43,8 @@ Decodes the list of words from utf-8
 
     def remove_digits(self, list):
         """
-Removes numbers that exist separetly.
-"""
+	Removes numbers that exist separetly.
+	"""
         word_list = []
         for word in list:
             word_no_digit = re.sub(r"\b\d+\b", "", word)
@@ -57,9 +57,9 @@ Removes numbers that exist separetly.
 
     def replace_punc(self, list):
         """
-Removes punctuation marks from the begining and end of the string and non-standard
-marks starting with &#x that exist separetly.
-"""
+	Removes punctuation marks from the begining and end of the string and non-standard
+	marks starting with &#x that exist separetly.
+	"""
         word_list = []
         for word in list:
             word_no_punc0 = re.sub("^&#x.*","", word)
@@ -70,8 +70,8 @@ marks starting with &#x that exist separetly.
 
     def get_important_parts(self, important_parts_list, xml_doc):
         """
-Gets only those elements that are important to search informations from articles with similar subject matter.
-"""
+	Gets only those elements that are important to search informations from articles with similar subject matter.
+	"""
 
         important_tags = xml_doc.findAll(important_parts_list)
         xml_doc_important = ''
@@ -81,18 +81,21 @@ Gets only those elements that are important to search informations from articles
         
     def get_paragraphs(self, xml_doc_important):
         """
-Divides xml text into sections.
-"""
+	Divides xml text into sections.
+	"""
         return xml_doc_important.findAll('p')[0:6]
         
     def get_text_from_paragraphs(self, paragraphs_list, bs_doc):
         """
-Returns a list of elements corresponding to list of words from particular section.
-"""
+	Returns a list of elements corresponding to list of words from particular section.
+	"""
         words_in_paragraph_list = []
         i=0
         for paragraph in paragraphs_list:
-            pmid_in_bracket = bs(str(bs_doc.findAll(attrs = {'pub-id-type':'pmid'})[0])).findAll(text=True)
+            try:
+                pmid_in_bracket = bs(str(bs_doc.findAll(attrs = {'pub-id-type':'pmid'})[0])).findAll(text=True)
+            except:
+                pmid_in_bracket = bs(str(bs_doc.findAll(attrs = {'pub-id-type':'pmc'})[0])).findAll(text=True)
             pmid = str(pmid_in_bracket[0].encode("utf-8"))
             words_in_one_paragraph = []
             #print paragraph
@@ -111,8 +114,8 @@ Returns a list of elements corresponding to list of words from particular sectio
 
     def stopwords(self, stopwords_file):
         """
-Creates a list with stopwords.
-"""
+	Creates a list with stopwords.
+	"""
         swords_file = open(stopwords_file, 'r').read().split(",")
         swords_list = []
         for word in swords_file:
@@ -123,19 +126,19 @@ Creates a list with stopwords.
         return swords_list
 
     def remove_junk(self, words_list):
-"""
-Removes stopwords and punctuation marks.
-"""
-swords_list = self.stopwords('stopwords2.txt')
-punctuation_list = self.list_of_punctuation
-junk_list = swords_list + punctuation_list
-for wrong_word in junk_list:
-for tuple_el in words_list:
-for word in tuple_el[2]:
-if wrong_word == word:
-#print word
-tuple_el[2].remove(word)
-return words_list
+	"""
+	Removes stopwords and punctuation marks.
+	"""
+	swords_list = self.stopwords('stopwords2.txt')
+	punctuation_list = self.list_of_punctuation
+	junk_list = swords_list + punctuation_list
+        for wrong_word in junk_list:
+            for tuple_el in words_list:
+		for word in tuple_el[2]:
+		    if wrong_word == word:
+		        #print word
+		        tuple_el[2].remove(word)
+	return words_list
         
 '''
 if __name__ == '__main__':
