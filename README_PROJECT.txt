@@ -154,7 +154,7 @@ Jako wynik uzyskamy:
 Skorelowane slowo: synthes,
 wartosc z-score: 5.396300,
 pmid_paragraf, w ktorych wystepuja slowo szukane i slowo skorelowane: ['16103903_2', '16103903_3', '16103903_4']
-
+(...)
 
 
 
