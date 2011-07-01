@@ -94,9 +94,11 @@ class XmlParser():
         for paragraph in paragraphs_list:
             try:
                 pmid_in_bracket = bs(str(bs_doc.findAll(attrs = {'pub-id-type':'pmid'})[0])).findAll(text=True)
+                print pmid_in_bracket
             except:
                 pmid_in_bracket = bs(str(bs_doc.findAll(attrs = {'pub-id-type':'pmc'})[0])).findAll(text=True)
             pmid = str(pmid_in_bracket[0].encode("utf-8"))
+            print pmid
             words_in_one_paragraph = []
             #print paragraph
             for text in paragraph.findAll(text=True):
